@@ -2,10 +2,20 @@ export const typeDefs = `#graphql
   type Query {
     me: User
     posts: [Post]
+    users: [User]
   }
   
   type Mutation {
     signup(name: String!, email: String!, password: String!): User
+    signin(
+      email: String!, 
+      password: String!
+    ): AuthResult
+  }
+
+  type AuthResult {
+    userError: String
+    token: String
   }
 
   type Post{
