@@ -3,6 +3,7 @@ export const typeDefs = `#graphql
     me: User
     posts: [Post]
     users: [User]
+    singleUser (userId: ID!) : User
   }
   
   type Mutation {
