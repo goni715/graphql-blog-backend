@@ -2,6 +2,14 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { typeDefs } from "./schema";
 import { resolvers } from "./resolvers";
+import { prisma } from "./lib/prisma";
+import { PrismaClient } from "./generated/prisma/client";
+import { GlobalOmitConfig } from "./generated/prisma/internal/prismaNamespace";
+import { DefaultArgs } from "@prisma/client/runtime/client";
+
+interface IContext {
+  prisma: PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>;
+}
 
 const server = new ApolloServer({
   typeDefs,
@@ -11,6 +19,11 @@ const server = new ApolloServer({
 async function main() {
   const { url } = await startStandaloneServer(server, {
     listen: { port: 4000 },
+    context: async (): Promise<IContext> => {
+      return {
+        prisma,
+      };
+    },
   });
   console.log(`🚀  Server ready at: ${url}`);
 }
