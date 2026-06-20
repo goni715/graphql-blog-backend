@@ -12,7 +12,9 @@ export const typeDefs = `#graphql
       email: String!, 
       password: String!
     ): AuthResult
+    addPost(title: String!, content: String!): PostPayload
   }
+
 
   type SignUpRes {
     userError: String
@@ -23,6 +25,11 @@ export const typeDefs = `#graphql
   type AuthResult {
     userError: String
     token: String
+  }
+
+  type PostPayload {
+    userError: String
+    post: Post
   }
 
   type Post{

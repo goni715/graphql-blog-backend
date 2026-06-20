@@ -1,5 +1,7 @@
 import { prisma } from "../../lib/prisma";
 import bcrypt from "bcryptjs";
+import jwt, { Secret } from 'jsonwebtoken'
+import config from "../../config";
 
 export interface IUserInfo {
   name: string;
@@ -77,10 +79,13 @@ export const Mutation = {
       };
     }
 
-    const token = jwt.sign(payload, "signature", { expiresIn: "1d" });
+    const token = jwt.sign(payload, config.jwt_secret as Secret, { expiresIn: "1d" });
     return {
       userError: null,
       token,
     };
   },
+  addPost: async (parent:any, args: {title: string, content: string}, context: any)=> {
+    console.log(args);
+  }
 };

@@ -6,6 +6,7 @@ import { prisma } from "./lib/prisma";
 import { PrismaClient } from "./generated/prisma/client";
 import { GlobalOmitConfig } from "./generated/prisma/internal/prismaNamespace";
 import { DefaultArgs } from "@prisma/client/runtime/client";
+import { jwtHelper } from "./utils/jwtHelper";
 
 interface IContext {
   prisma: PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>;
@@ -19,8 +20,10 @@ const server = new ApolloServer({
 async function main() {
   const { url } = await startStandaloneServer(server, {
     listen: { port: 4000 },
-    context: async (): Promise<IContext> => {
-      return {
+    context: async ({ req }): Promise<IContext> => {
+      const userData = await jwtHelper.getUserInfoFromToken(req.headers.authorization as string);
+      console.log(userData);
+      return { 
         prisma,
       };
     },
