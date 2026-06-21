@@ -53,11 +53,11 @@ export const postMutations = {
       },
     });
 
-    if(!user){
+    if (!user) {
       return {
         userError: "User not found",
-        post: null
-      }
+        post: null,
+      };
     }
 
     if (!post.title && !post.content) {
@@ -96,5 +96,55 @@ export const postMutations = {
       userError: null,
       post: updatedPost,
     };
+  },
+  deletePost: async (parent: any, args: { postId: string }, context: any) => {
+    if (!context.userInfo) {
+      return {
+        userError: "You are not authorized",
+        post: null,
+      };
+    }
+
+    //check user
+    const user = await prisma.user.findUnique({
+      where: {
+        id: Number(context?.userInfo?.userId),
+      },
+    });
+
+    if (!user) {
+      return {
+        userError: "User not found",
+        post: null,
+      };
+    }
+
+    //check post
+    const postExist = await prisma.post.findUnique({
+      where: {
+        id: Number(args.postId),
+        authorId: context?.userInfo?.userId,
+      },
+    });
+
+    if (!postExist) {
+      return {
+        userError: "Post not found",
+        post: null,
+      };
+    }
+
+    //delete post
+    const deletedPost = await prisma.post.delete({
+      where: {
+        id: Number(args.postId),
+        authorId: context?.userInfo?.userId,
+      },
+    });
+
+    return {
+      userError: null,
+      post: deletedPost
+    }
   },
 };
