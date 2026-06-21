@@ -3,7 +3,7 @@ export const typeDefs = `#graphql
     me: UserPayload
     posts: [Post]
     users: [User]
-    singleUser (userId: ID!) : User
+    singleUser (userId: ID!) : User,
   }
   
   type Mutation {

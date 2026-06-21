@@ -1,6 +1,11 @@
 export const userQuery = {
   users: async (parent: any, args: any, { prisma }: any) => {
-    const result = await prisma.user.findMany();
+    const result = await prisma.user.findMany({
+      include: {
+        profile: true,
+        // posts: true,
+      },
+    });
     return result;
   },
   singleUser: async (parent: any, args: any, { prisma }: any) => {
@@ -42,12 +47,35 @@ export const userQuery = {
       },
       include: {
         profile: true,
+        posts: true,
       },
     });
 
     return {
-        userError: null,
-        user: result
+      userError: null,
+      user: result,
     };
+  },
+};
+
+//Handle Relationship
+export const User = {
+  posts: async (parent: any, args: any, { prisma, userInfo }: any) => {
+    //console.log(parent.id); // authorId
+    const isMyProfile = parent.id === userInfo.userId;
+    if (isMyProfile) {
+      return await prisma.post.findMany({
+        where: {
+          authorId: Number(parent.id),
+        },
+      });
+    }
+
+    return await prisma.post.findMany({
+      where: {
+        authorId: Number(parent.id),
+        published: true,
+      },
+    });
   },
 };
