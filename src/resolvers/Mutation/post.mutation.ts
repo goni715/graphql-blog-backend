@@ -144,7 +144,58 @@ export const postMutations = {
 
     return {
       userError: null,
-      post: deletedPost
+      post: deletedPost,
+    };
+  },
+  publishPost: async (parent: any, args: { postId: string }, context: any) => {
+    if (!context.userInfo) {
+      return {
+        userError: "You are not authorized",
+        post: null,
+      };
     }
+
+    //check user
+    const user = await prisma.user.findUnique({
+      where: {
+        id: Number(context?.userInfo?.userId),
+      },
+    });
+
+    if (!user) {
+      return {
+        userError: "User not found",
+        post: null,
+      };
+    }
+
+    const postExist = await prisma.post.findUnique({
+      where: {
+        id: Number(args.postId),
+        authorId: context?.userInfo?.userId,
+      },
+    });
+
+    if (!postExist) {
+      return {
+        userError: "Post not found",
+        post: null,
+      };
+    }
+
+    const updatedPost = await prisma.post.update({
+      where: {
+        id: Number(args.postId),
+        authorId: context?.userInfo?.userId,
+      },
+      data: {
+        published: true,
+      },
+    });
+
+    return {
+      userError: null,
+      post: updatedPost,
+    };
   },
 };
