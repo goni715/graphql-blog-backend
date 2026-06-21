@@ -12,7 +12,8 @@ export const typeDefs = `#graphql
       email: String!, 
       password: String!
     ): AuthResult
-    addPost(title: String!, content: String!): PostPayload
+    addPost(post: PostInput!): PostPayload
+    updatePost(postId: ID!, post: PostInput): PostPayload
   }
 
 
@@ -55,6 +56,11 @@ export const typeDefs = `#graphql
     bio: String
     createdAt: String
     user: User!
+  }
+
+  input PostInput {
+    title: String
+    content: String
   }
 
 `;
