@@ -1,6 +1,6 @@
 export const typeDefs = `#graphql
   type Query {
-    me: User
+    me: UserPayload
     posts: [Post]
     users: [User]
     singleUser (userId: ID!) : User
@@ -51,6 +51,11 @@ export const typeDefs = `#graphql
     createdAt: String
     posts: [Post]
     profile: Profile
+  }
+
+  type UserPayload{
+    userError: String
+    user: User
   }
 
   type Profile {
