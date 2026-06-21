@@ -1,6 +1,6 @@
 import { prisma } from "../../lib/prisma";
 import bcrypt from "bcryptjs";
-import jwt, { Secret } from 'jsonwebtoken'
+import jwt, { Secret } from "jsonwebtoken";
 import config from "../../config";
 
 export interface IUserInfo {
@@ -79,13 +79,45 @@ export const Mutation = {
       };
     }
 
-    const token = jwt.sign(payload, config.jwt_secret as Secret, { expiresIn: "1d" });
+    const token = jwt.sign(payload, config.jwt_secret as Secret, {
+      expiresIn: "1d",
+    });
     return {
       userError: null,
       token,
     };
   },
-  addPost: async (parent:any, args: {title: string, content: string}, context: any)=> {
-    console.log(args);
-  }
+  addPost: async (
+    parent: any,
+    args: { title: string; content: string },
+    context: any,
+  ) => {
+    if (!context.userInfo) {
+      return {
+        userError: "You are not authorized",
+        post: null,
+      };
+    }
+
+    if (!args.title || !args.content) {
+      return {
+        userError: "Title & Content must be required",
+        post: null,
+      };
+    }
+
+    const newPost = await prisma.post.create({
+      data: {
+        authorId: context?.userInfo?.userId,
+        title: args.title,
+        content: args.content
+      }
+    })
+
+    return {
+      userError: null,
+      post: newPost
+    }
+
+  },
 };

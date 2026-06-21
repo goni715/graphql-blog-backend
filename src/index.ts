@@ -10,6 +10,10 @@ import { jwtHelper } from "./utils/jwtHelper";
 
 interface IContext {
   prisma: PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>;
+  userInfo: {
+    userId: number;
+    email: string;
+  } | null;
 }
 
 const server = new ApolloServer({
@@ -21,10 +25,12 @@ async function main() {
   const { url } = await startStandaloneServer(server, {
     listen: { port: 4000 },
     context: async ({ req }): Promise<IContext> => {
-      const userData = await jwtHelper.getUserInfoFromToken(req.headers.authorization as string);
-      console.log(userData);
-      return { 
+      const userData = await jwtHelper.getUserInfoFromToken(
+        req.headers.authorization as string,
+      );
+      return {
         prisma,
+        userInfo: userData,
       };
     },
   });
