@@ -1,3 +1,4 @@
+import { userLoader } from "../../dataLoaders/userLoader";
 import { prisma } from "../../lib/prisma";
 
 export const postQuery = {
@@ -21,10 +22,13 @@ export const postQuery = {
 
 export const Post = {
   author: async (parent: any, args: any, { prisma, userInfo }: any) => {
-    return await prisma.user.findUnique({
-      where: {
-        id: parent.authorId,
-      },
-    });
+    // return await prisma.user.findUnique({
+    //   where: {
+    //     id: parent.authorId,
+    //   },
+    // });
+
+    //using dataLoader
+    return userLoader.load(parent.authorId);
   },
 };
