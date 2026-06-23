@@ -2,6 +2,8 @@
 
 A high-performance, robust, and type-safe GraphQL backend server for a blogging application. Built using modern technologies including **Apollo Server**, **PostgreSQL**, **Prisma ORM**, and hosted/managed via **Supabase**.
 
+🔗 **Live Server Link:** [https://graphql-blog-backend.vercel.app](https://graphql-blog-backend.vercel.app)
+
 ---
 
 ## 🛠️ Tech Stack & Key Technologies
