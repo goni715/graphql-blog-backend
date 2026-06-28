@@ -479,8 +479,104 @@ query SingleUser {
     }
 }
 ```
+### 6. Get My Profile Query (Authorized)
+Fetch the profile and posts of the currently authenticated user.
 
-### 6. Add Post Mutation (Authorized)
+**Query:**
+```graphql
+query GetMyProfile {
+  me {
+    userError
+    user {
+      id
+      name
+      email
+      profile {
+        bio
+      }
+      posts {
+        id
+        title
+        content
+        published
+        createdAt
+      }
+    }
+  }
+}
+```
+
+**HTTP Headers:**
+```json
+{
+    "Authorization": "YOUR_JWT_TOKEN_HERE"
+}
+```
+
+**Expected Response:**
+```json
+{
+  "data": {
+    "me": {
+      "userError": null,
+      "user": {
+        "id": "12",
+        "name": "Manik Islam",
+        "email": "manik@gmail.com",
+        "profile": {
+          "bio": "I am car driver"
+        },
+        "posts": [
+          {
+            "id": "5",
+            "title": "Updated Title",
+            "content": "Updated content",
+            "published": true,
+            "createdAt": "1782014608087"
+          },
+          {
+            "id": "9",
+            "title": "Title 05",
+            "content": "content 06",
+            "published": false,
+            "createdAt": "1782025301174"
+          },
+          {
+            "id": "8",
+            "title": "Title 04",
+            "content": "content 04",
+            "published": true,
+            "createdAt": "1782025288094"
+          },
+          {
+            "id": "11",
+            "title": "Title 05",
+            "content": "content 06",
+            "published": false,
+            "createdAt": "1782492092279"
+          },
+          {
+            "id": "12",
+            "title": "This is new",
+            "content": "This is new blog content",
+            "published": true,
+            "createdAt": "1782492241137"
+          },
+          {
+            "id": "7",
+            "title": "Title 03",
+            "content": "content 03",
+            "published": true,
+            "createdAt": "1782025279305"
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+### 7. Add Post Mutation (Authorized)
 Create a new draft post by providing the required authentication header.
 
 **Input Schema Definition:**
@@ -536,7 +632,7 @@ mutation AddPost($post: PostInput!) {
 }
 ```
 
-### 7. Add Post Mutation (Unauthorized Error)
+### 8. Add Post Mutation (Unauthorized Error)
 Attempting to create a post without providing the `Authorization` HTTP header.
 
 **Expected Response:**
@@ -551,7 +647,7 @@ Attempting to create a post without providing the `Authorization` HTTP header.
 }
 ```
 
-### 8. Update Post Mutation (Authorized)
+### 9. Update Post Mutation (Authorized)
 Update the title or content of an existing post.
 
 **Mutation:**
@@ -600,7 +696,7 @@ mutation UpdatePost($postId: ID!, $post: PostInput) {
 }
 ```
 
-### 9. Publish Post Mutation (Authorized)
+### 10. Publish Post Mutation (Authorized)
 Publish a drafted post (marks `published` as `true`).
 
 **Mutation:**
@@ -649,7 +745,7 @@ mutation PublishPost($postId: ID!) {
 }
 ```
 
-### 10. Delete Post Mutation (Authorized)
+### 11. Delete Post Mutation (Authorized)
 Delete an existing post.
 
 **Mutation:**
